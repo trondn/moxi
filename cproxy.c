@@ -24,10 +24,10 @@ downstream *downstream_list_waiting_remove(downstream *head,
                                            downstream **tail,
                                            downstream *d);
 
-void downstream_timeout(const int fd,
+static void downstream_timeout(evutil_socket_t fd,
                         const short which,
                         void *arg);
-void wait_queue_timeout(const int fd,
+static void wait_queue_timeout(evutil_socket_t fd,
                         const short which,
                         void *arg);
 
@@ -1541,7 +1541,7 @@ conn *cproxy_connect_downstream_conn(downstream *d,
     d->ptd->stats.stats.tot_downstream_connect_started++;
 
     int err = -1;
-    int fd = mcs_connect(mcs_server_st_hostname(msst),
+    SOCKET fd = mcs_connect(mcs_server_st_hostname(msst),
                          mcs_server_st_port(msst), &err,
                          MOXI_BLOCKING_CONNECT);
 
@@ -2275,9 +2275,9 @@ bool cproxy_start_wait_queue_timeout(proxy_td *ptd, conn *uc) {
     return true;
 }
 
-void wait_queue_timeout(const int fd,
-                        const short which,
-                        void *arg) {
+static void wait_queue_timeout(evutil_socket_t fd,
+                               const short which,
+                               void *arg) {
     (void)fd;
     (void)which;
     proxy_td *ptd = arg;
@@ -2678,7 +2678,7 @@ bool is_compatible_request(conn *existing, conn *candidate) {
     return false;
 }
 
-void downstream_timeout(const int fd,
+void downstream_timeout(evutil_socket_t fd,
                         const short which,
                         void *arg) {
     (void)fd;
@@ -2810,10 +2810,10 @@ bool cproxy_start_downstream_timeout_ex(downstream *d, conn *c,
 
 int cproxy_auth_downstream(mcs_server_st *server,
                            proxy_behavior *behavior,
-                           int fd) {
+                           SOCKET fd) {
     assert(server);
     assert(behavior);
-    assert(fd != -1);
+    assert(fd != INVALID_SOCKET);
 
     char buf[3000];
 
@@ -2953,11 +2953,11 @@ int cproxy_auth_downstream(mcs_server_st *server,
 
 int cproxy_bucket_downstream(mcs_server_st *server,
                              proxy_behavior *behavior,
-                             int fd) {
+                             SOCKET fd) {
     assert(server);
     assert(behavior);
     assert(IS_PROXY(behavior->downstream_protocol));
-    assert(fd != -1);
+    assert(fd != INVALID_SOCKET);
 
     if (!IS_BINARY(behavior->downstream_protocol)) {
         return 0;

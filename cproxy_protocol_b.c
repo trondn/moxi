@@ -302,11 +302,11 @@ void cproxy_process_downstream_binary_nread(conn *c) {
     }
 }
 
-void cproxy_dump_header(int prefix, char *bb) {
+void cproxy_dump_header(SOCKET prefix, char *bb) {
     if (settings.verbose > 2) {
         char buf[200];
 
-        int prefix_len = snprintf(buf, sizeof(buf), "%d   ", prefix);
+        int prefix_len = snprintf(buf, sizeof(buf), "%d   ", (int)prefix);
         int start = prefix_len;
 
         for (size_t ii = 0; ii < sizeof(protocol_binary_request_header); ++ii) {
