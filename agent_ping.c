@@ -178,7 +178,7 @@ static void perform_ping_test(struct ping_test_recipe recipe,
     memset(key, 't', recipe.keysize);
     /* Value is a random bunch of stuff */
     for (int i = 0; i < recipe.valsize; i++) {
-        value[i] = random() & 0xff;
+        value[i] = rand() & 0xff;
     }
 
     if (memcached_set(mst,
@@ -309,7 +309,7 @@ static void ping_server(char *server_name,
 
                     perform_ping_test(recipes[j], &mst,
                                       &recipe_stats, &failures);
-                    int vlen = strlen(recipes[j].name) + 8;
+                    int vlen = (int)strlen(recipes[j].name) + 8;
                     char val_name[vlen];
 
                     stat_report(val_name, vlen, recipes[j].name,

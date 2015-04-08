@@ -119,7 +119,7 @@ int cproxy_init_agent(char *cfg_str,
         exit(EXIT_FAILURE);
     }
 
-    int cfg_len = strlen(cfg_str);
+    int cfg_len = (int)strlen(cfg_str);
     if (cfg_len <= 0) {
         moxi_log_write("ERROR: empty cfg\n");
         if (ml->log_mode != ERRORLOG_STDERR) {
@@ -237,7 +237,7 @@ int cproxy_init_agent(char *cfg_str,
 
         int dbpath_alloc = 0;
         if (dbpath == NULL) {
-            dbpath_alloc = strlen(jid) + strlen(CONFLATE_DB_PATH) + 100;
+            dbpath_alloc = (int)(strlen(jid) + strlen(CONFLATE_DB_PATH) + 100);
             dbpath = calloc(dbpath_alloc, 1);
             if (dbpath != NULL) {
                 snprintf(dbpath, dbpath_alloc,
@@ -881,9 +881,9 @@ bool cproxy_on_config_json_one_ketama(proxy_main *m, uint32_t new_config_ver,
                         for (j = 0; j < behavior_pool.num; j++) {
                             /* Grow config string for libmemcached. */
 
-                            int x = 40 + /* For port and weight. */
+                            int x = (int)(40 + /* For port and weight. */
                                 strlen(config_str) +
-                                strlen(behavior_pool.arr[j].host);
+                                strlen(behavior_pool.arr[j].host));
                             if (config_len < x) {
                                 config_len = 2 * (config_len + x);
                                 config_str = realloc(config_str, config_len);
@@ -1491,9 +1491,9 @@ char *parse_kvs_servers(char *prefix,
 
         /* Grow config string for libmemcached. */
 
-        int x = 40 + /* For port and weight. */
+        int x = (int)(40 + /* For port and weight. */
             strlen(config_str) +
-            strlen(behavior_pool->arr[j].host);
+            strlen(behavior_pool->arr[j].host));
         if (config_len < x) {
             config_len = 2 * (config_len + x);
             config_str = realloc(config_str, config_len);

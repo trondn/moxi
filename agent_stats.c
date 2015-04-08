@@ -1156,7 +1156,7 @@ static void work_stats_collect(void *data0, void *data1) {
     bool locked = true;
 
     if (p->name != NULL) {
-        int   key_len = strlen(p->name) + 50;
+        int   key_len = (int)strlen(p->name) + 50;
         char *key_buf = malloc(key_len);
         if (key_buf != NULL) {
             snprintf(key_buf, key_len, "%d:%s", p->port, p->name);
@@ -1912,7 +1912,7 @@ void proxy_stats_dump_config(ADD_STAT add_stats, conn *c) {
             p->config != NULL) {
             snprintf(prefix, sizeof(prefix), "%u:%s:config", p->port, p->name);
 
-            add_stats(prefix, strlen(prefix), p->config, strlen(p->config), c);
+            add_stats(prefix, (uint16_t)strlen(prefix), p->config, (uint32_t)strlen(p->config), c);
         }
 
         cb_mutex_exit(&p->proxy_lock);
